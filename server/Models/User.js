@@ -2,20 +2,22 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+const uniqueValidator = require("mongoose-unique-validator");
+
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
-    unique: [true, "Username is taken"],
+    required: [true, "Username is required"],
+    unique: true,
   },
   email: {
     type: String,
-    required: true,
-    unique: [true, "Email is taken"],
+    required: [true, "Email is required"],
+    unique: [true, "That email is taken"],
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Password is required"],
   },
   posts: [
     {
@@ -23,6 +25,10 @@ const UserSchema = new Schema({
       ref: "Post",
     },
   ],
+});
+
+UserSchema.plugin(uniqueValidator, {
+  message: "Error, expected {PATH} to be unique.",
 });
 
 module.exports = mongoose.model("User", UserSchema);

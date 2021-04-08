@@ -2,29 +2,44 @@ const Post = require("../Models/Post");
 const User = require("../Models/User");
 
 class PostController {
-  static async getPosts(req, res, next) {
+  static async getPosts(req, res) {
     try {
-      const posts = await Post.find({}).populate("comments");
+      const posts = await Post.find({}).populate("comments").populate("user");
 
       res.status(200).json({ posts });
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ err });
     }
   }
 
-  static async getPost(req, res, next) {
+  static async getUserPosts(req, res) {
+    try {
+      const { _id } = req.dataUser;
+
+      const posts = await User.find({ _id }).populate("posts");
+
+      res.status(200).json({ data: posts });
+    } catch (err) {
+      console.log(err);
+      res.status(404).json({ err });
+    }
+  }
+
+  static async getPost(req, res) {
     try {
       const { postId } = req.params;
 
-      const post = await Post.find({ _id: postId }).populate("comments");
+      const post = await Post.find({ _id: postId })
+        .populate("comments")
+        .populate("user");
 
       res.status(200).json({ post });
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ err });
     }
   }
 
-  static async createPost(req, res, next) {
+  static async createPost(req, res) {
     try {
       let { title, description } = req.body;
       const userId = req.dataUser;
@@ -45,14 +60,23 @@ class PostController {
 
       res.status(201).json(newPost);
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.title) {
+        message.push(err.errors.title.message);
+      }
+      if (err.errors.description) {
+        message.push(err.errors.description.message);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
-  static async updatePost(req, res, next) {
+  static async updatePost(req, res) {
     try {
       let { title, description } = req.body;
-      const postId = req.params.id;
+      const postId = req.params.postId;
       const updatedPost = {
         title,
         description,
@@ -64,20 +88,29 @@ class PostController {
       });
       res.status(200).json({ message: "Post updated" });
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.title) {
+        message.push(err.errors.title.message);
+      }
+      if (err.errors.description) {
+        message.push(err.errors.description.message);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
-  static async deletePost(req, res, next) {
+  static async deletePost(req, res) {
     try {
-      const postId = req.params.id;
+      const postId = req.params.postId;
 
       const deletePost = await Post.findByIdAndDelete(postId);
 
       if (!deletePost) res.status(404).json({ message: "No post found" });
       res.status(200).json({ message: "Post deleted" });
     } catch (err) {
-      console.log(err);
+      res.status(500).json({ err });
     }
   }
 }

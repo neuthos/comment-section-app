@@ -29,7 +29,13 @@ class CommentController {
 
       res.status(201).json(newComment);
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.text) {
+        message.push(err.errors.text.message);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
@@ -41,7 +47,6 @@ class CommentController {
 
       const comment = await Comment.findOne({ _id: commentId });
 
-      // const post = await Post.findOne({ _id: postId });
       const newReply = new Comment({
         name: username,
         text,
@@ -58,7 +63,13 @@ class CommentController {
 
       res.status(201).json(newReply);
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.text) {
+        message.push(err.errors.text.message);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
@@ -66,11 +77,11 @@ class CommentController {
     try {
       let commentId = req.params.commentId;
 
-      const comment = await Comment.find().populate("reply");
+      const comment = await Comment.find({ _id: commentId }).populate("reply");
 
       res.status(200).json({ comment });
     } catch (err) {
-      console.log(err);
+      res.status(404).json({ error: "Comment not found" });
     }
   }
 
@@ -81,7 +92,6 @@ class CommentController {
       const updateComment = {
         text,
       };
-      console.log(updateComment);
 
       await Comment.findByIdAndUpdate(commentId, updateComment, {
         useFindAndModify: false,
@@ -89,7 +99,13 @@ class CommentController {
 
       res.status(200).json({ message: "Comment updated" });
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.text) {
+        message.push(err.errors.text.message);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
@@ -102,7 +118,7 @@ class CommentController {
       if (!deleteComment) res.status(404).json({ message: "No comment found" });
       res.status(200).json({ message: "Comment deleted" });
     } catch (err) {
-      console.log(err);
+      res.status(500).json({ err });
     }
   }
 }

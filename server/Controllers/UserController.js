@@ -1,11 +1,15 @@
 const User = require("../Models/User");
 const { hashPassword, checkPassword } = require("../helper/bcrypt");
 const signToken = require("../helper/jwt");
+mongooseErrorHandler = require("mongoose-error-handler");
 
 class UserController {
-  static async register(req, res, next) {
+  static async register(req, res) {
     try {
       let { username, email, password } = req.body;
+
+      if (password === "") throw { errors: "Password cannot be empty" };
+
       const newPass = hashPassword(password);
       const newUser = new User({
         username,
@@ -13,10 +17,22 @@ class UserController {
         password: newPass,
         posts: [],
       });
+
       await newUser.save();
       res.status(201).json(newUser);
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.username) {
+        message.push(err.errors.username.message);
+      }
+      if (err.errors.email) {
+        message.push(err.errors.email.message);
+      } else if (err.errors) {
+        message.push(err.errors);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 
@@ -27,12 +43,12 @@ class UserController {
       const user = await User.findOne({ email }).populate("posts");
 
       if (!user) {
-        throw { message: "Invalid email or password" };
+        throw { errors: "Invalid email or password" };
       } else {
         const comparePassword = checkPassword(password, user.password);
 
         if (!comparePassword) {
-          throw { message: "Invalid email or password" };
+          throw { errors: "Invalid email or password" };
         } else {
           let payload = {
             _id: user._id,
@@ -45,7 +61,18 @@ class UserController {
         }
       }
     } catch (err) {
-      console.log(err);
+      let message = [];
+
+      if (err.errors.username) {
+        message.push(err.errors.username.message);
+      }
+      if (err.errors.email) {
+        message.push(err.errors.email.message);
+      } else if (err.errors) {
+        message.push(err.errors);
+      }
+
+      res.status(400).json({ error: message });
     }
   }
 }
