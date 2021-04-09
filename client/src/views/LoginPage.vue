@@ -50,6 +50,7 @@
                       </div>
                     </v-col>
                     <!-- END LOGIN  -->
+                    <!-- Handle Switch Modal -->
                     <v-col cols="12" md="4" class="teal accent-3">
                       <v-card-text class="white--text mt-12">
                         <h1 class="text-center display-1">Hello, Friend!</h1>
@@ -80,6 +81,7 @@
                         >
                       </div>
                     </v-col>
+                    <!-- Handle Switch Modal -->
                     <!-- REGISTER  -->
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
@@ -135,6 +137,7 @@
                         >
                       </div>
                     </v-col>
+                    <!-- END REGISTER -->
                   </v-row>
                 </v-window-item>
               </v-window>

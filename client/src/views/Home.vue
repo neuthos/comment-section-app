@@ -175,7 +175,7 @@ body {
   text-overflow: ellipsis;
 }
 
-/* POST  */
+/* POST STYLE  */
 .comment-section {
   width: 900px;
   margin: 1rem auto;

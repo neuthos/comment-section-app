@@ -11,10 +11,43 @@
     </div>
 
     <div class="card-reply-desc" style="font-size: 1.2rem">
-      <p>
+      <p v-if="!updateReplyFlag">
         {{ getCommentData.reply[i].text }}
       </p>
+      <div v-if="updateReplyFlag" style="width: 80%; display: flex">
+        <v-textarea
+          auto-grow
+          rounded
+          outlined
+          height="10px"
+          width="80px"
+          v-model="text"
+        />
+        <v-btn
+          rounded
+          color="green accent-3"
+          dark
+          class="btn-margin"
+          @click.prevent="updateReply"
+          style="margin-top: 10px; margin-left: 10px"
+          >Update</v-btn
+        >
+      </div>
     </div>
+
+    <i
+      style="
+        position: relative;
+        bottom: -25px;
+        font-size: 20px;
+        color: black;
+        cursor: pointer;
+        margin-right: 10px;
+      "
+      class="fas fa-edit"
+      @click.prevent="showUpdate"
+      v-if="name === getCommentData.reply[i].name"
+    ></i>
 
     <i
       style="
@@ -38,6 +71,8 @@ export default {
   data() {
     return {
       name: localStorage.name,
+      updateReplyFlag: false,
+      text: "",
     };
   },
 
@@ -55,6 +90,24 @@ export default {
 
       this.$store.state.replyFlag = "";
     },
+    showUpdate() {
+      if (this.updateReplyFlag) {
+        this.updateReplyFlag = false;
+      } else {
+        this.text = this.getCommentData.reply[this.i].text;
+        this.updateReplyFlag = true;
+      }
+    },
+
+    updateReply() {
+      this.$store.dispatch("updateComment", {
+        access_token: localStorage.access_token,
+        commentId: this.getCommentData.reply[this.i]._id,
+        postId: this.getCommentData.post,
+        text: this.text,
+      });
+      this.$store.state.replyFlag = "";
+    },
   },
 
   computed: {
@@ -64,6 +117,9 @@ export default {
 
     getUser() {
       return this.$store.state.user;
+    },
+    getTextRepy() {
+      return this.getCommentData.reply[this.i].text;
     },
   },
 

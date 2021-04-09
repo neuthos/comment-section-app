@@ -11,7 +11,9 @@
       <v-list>
         <v-list-item class="mb-12">
           <v-list-item-content>
-            <v-icon class="mb-2" large>fas fa-comment</v-icon>
+            <v-icon class="mb-2 home-btn" @click.prevent="toHomePage" large
+              >fas fa-comment</v-icon
+            >
             <v-list-item-subtitle align="center">Neu</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -48,6 +50,9 @@ export default {
     home() {
       this.$router.push({ name: "MyPosts" });
     },
+    toHomePage() {
+      this.$router.push("/");
+    },
   },
 
   computed: {
@@ -57,3 +62,9 @@ export default {
   },
 };
 </script>
+
+<style >
+.home-btn {
+  cursor: pointer;
+}
+</style>

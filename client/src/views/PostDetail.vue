@@ -17,7 +17,7 @@
               <p>{{ getPost.user.username }}</p>
             </div>
 
-            <!-- COMMENT -->
+            <!-- COMMENT CARD -->
             <div class="card-body-detail">
               <h3 style="font-size: 2rem">{{ getPost.title }}</h3>
               <p style="color: #536162">{{ getDate }}</p>
@@ -44,8 +44,6 @@
             />
           </div>
         </div>
-
-        <!-- comment -->
 
         <div class="comment-list">
           <CommentCard
@@ -118,7 +116,6 @@ export default {
 <style scoped>
 .main-container {
   background-color: #399689;
-  /* margin: auto; */
   width: 80%;
   min-height: 600px;
   position: absolute;

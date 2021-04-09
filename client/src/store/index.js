@@ -171,6 +171,7 @@ export default new Vuex.Store({
         .then(({ data }) => {
           console.log(data);
           context.dispatch("fetchMyPosts", payload.access_token);
+          Swal.fire("Succes", "Update success", "success");
         })
         .catch(({ response }) => {
           console.log(response);
@@ -225,6 +226,7 @@ export default new Vuex.Store({
             id: payload.postId,
             access_token: payload.access_token,
           });
+          Swal.fire("Succes", "Add success", "success");
         })
         .catch((err) => {
           console.log(err);
@@ -245,6 +247,7 @@ export default new Vuex.Store({
             id: payload.postId,
             access_token: payload.access_token,
           });
+          Swal.fire("Succes", "Add success", "success");
         })
         .catch((err) => {
           console.log(err);
@@ -266,6 +269,7 @@ export default new Vuex.Store({
             id: payload.postId,
             access_token: payload.access_token,
           });
+          Swal.fire("Succes", "Update success", "success");
         })
         .catch((err) => {
           console.log(err);
