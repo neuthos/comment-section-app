@@ -284,6 +284,11 @@ export default new Vuex.Store({
         headers: { access_token: payload.access_token },
       })
         .then(() => {
+          context.dispatch("getComment", {
+            access_token: localStorage.access_token,
+            commentId: payload.commentId,
+          });
+
           context.dispatch("fetchPost", {
             id: payload.postId,
             access_token: payload.access_token,

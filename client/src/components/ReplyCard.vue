@@ -83,10 +83,6 @@ export default {
         commentId: this.getCommentData.reply[this.i]._id,
         postId: this.getCommentData.post,
       });
-      this.$store.dispatch("getComment", {
-        commentId: this.commentId,
-        access_token: localStorage.access_token,
-      });
 
       this.$store.state.replyFlag = "";
     },
@@ -106,6 +102,7 @@ export default {
         postId: this.getCommentData.post,
         text: this.text,
       });
+
       this.$store.state.replyFlag = "";
     },
   },
